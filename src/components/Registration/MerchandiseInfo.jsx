@@ -3,7 +3,7 @@ import { Toast } from "react-bootstrap";
 import axios from 'axios';
 import { Modal, Button} from 'react-bootstrap';
 
-const MerchandiseInfo = ({ payAmount, formValues, formik, nextStep, event, merchandise, currentStep, setCurrentStep }) => {
+const MerchandiseInfo = ({ payAmount, formValues, formik, nextStep, event, merchandise, currentStep, setCurrentStep, hasPrefilledMerchandise }) => {
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
   const [toastVariant, setToastVariant] = useState("");
@@ -152,6 +152,9 @@ The Border Double is a premium endurance challenge designed for runners who want
 </ul>
                 </div>
 }
+{hasPrefilledMerchandise &&
+<div className='fw-bold'>You already opted border double in previous event, please skip to continue</div>
+}
               <div className="col-md-5">
                 <div className='d-flex gap-2 align-items-start gap-3'>
                   <div>
@@ -267,7 +270,7 @@ The Border Double is a premium endurance challenge designed for runners who want
             </div>
           ))}
           <div className='d-flex justify-content-center flex-column flex-md-row align-items-center gap-1 gap-md-3'>
-            <button className='btn btn-lg btn-primary' disabled={!selectedMerchandiseId || alert || (event?.slug === "bluemountrunners10k2026" && tShirtAlert)} onClick={handleSubmit}>Continue and checkout</button>
+            <button className='btn btn-lg btn-primary' disabled={hasPrefilledMerchandise || !selectedMerchandiseId || alert || (event?.slug === "bluemountrunners10k2026" && tShirtAlert)} onClick={handleSubmit}>Continue and checkout</button>
             <button className='btn btn-lg btn-danger' onClick={handleButtonClick}
             disabled={selectedMerchandiseId}
             >Skip and checkout</button>

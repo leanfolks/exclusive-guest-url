@@ -6,6 +6,7 @@ import TimePicker from "react-multi-date-picker/plugins/time_picker";
 import axios from 'axios';
 import { baseUrl } from '../../apiConfig';
 import { IndianStates } from '../constants/IndianStates';
+import moment from "moment";
 
 const TShirtSizeModal = ({ show, handleClose, customSlug, eventCategory }) => {
   return (
@@ -280,7 +281,7 @@ eventCategory?.slug === "senthil-marathon-2024" ?
 )}
 
 
-const CustomerInfo = ({registrationUrl, randomString, verificationData, isEmailVerificationEnabled, isSmsVerificationEnabled, formik, eventCategory, categoryNames, categoryMinimumAge, customSlug, isMatched, matchedAgeBracket }) => {  
+const CustomerInfo = ({findCoupon, registrationUrl, randomString, verificationData, isEmailVerificationEnabled, isSmsVerificationEnabled, formik, eventCategory, categoryNames, categoryMinimumAge, customSlug, isMatched, matchedAgeBracket }) => {  
   const [showTermsPopover, setShowTermsPopover] = useState(false);
   const [showAdditionalTermsPopover, setShowAdditionalTermsPopover] = useState(false);
   const [show, setShow] = useState(false);
@@ -453,7 +454,7 @@ useEffect(() => {
   formik.values.contactNumber,
   formik.values.dateOfBirth,
   formik.values.gender,
-  formik
+  //formik
 ]);
 
 
@@ -1272,6 +1273,41 @@ return (
           </div>
           </>
 }
+<p className="fw-bold mt-3">Enter Coupon code if exists</p>
+           <div className="form-input form-group row mx-0 my-2">
+            
+            <label className="text-16 fw-bold col-sm-4">
+                Code
+              </label>
+              <div className="form-input col-sm-8">
+                <>
+                {findCoupon && findCoupon?.isActive === true && expiry >= new Date() && 
+                <div className='text-blue-1 fw-bold'>{`Apply Early Bird Coupon: ${findCoupon?.couponCode} Valid until ${moment(findCoupon?.expiresAt).format('MMMM D, YYYY')}`}</div>
+}
+              <input
+                type="text" 
+                id="couponCode"
+                name="couponCode" 
+                className='form-control p-2 custom-placeholder'
+               // placeholder="Leave blank if you don't have one"
+               onChange={(e) => {
+  formik.handleChange(e);
+  if (formik.errors.couponCode) {
+    formik.setFieldError("couponCode", undefined);
+  }
+}}
+                onBlur={formik.handleBlur}
+                value={formik.values.couponCode || ""}
+                disabled={!formik.values.categoryName}
+              />
+              </>
+             {formik.touched.couponCode && formik.errors.couponCode && (
+  <div className="text-danger font-weight-bold">
+    {formik.errors.couponCode}
+  </div>
+)}    
+            </div>            
+          </div>
           {eventCategory?.slug !== "racing-kids-2024" && (
           <>
 {eventCategory?.slug !== "rmkv-saree-walkathon-2024" &&

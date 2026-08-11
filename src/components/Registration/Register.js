@@ -70,7 +70,32 @@ console.log(isSubmittingForm, formSubmitted, categoryMaximumAge);
   //   return genderObject;
   // };
   // const genderObject = createGenderObject(event?.category);
-  // const generateCouponError = (message) => new Yup.ValidationError(message, null, 'couponCode');
+  const [findCoupon, setFindCoupon] = useState(null);
+   const fetchEarlyBird = async () => {
+    try {
+      const response = await axios.get(`${baseUrl}Coupons/getguestearlybirdcoupon?eventId=${event?.id}`);
+      setFindCoupon(response.data);
+    } catch (error) {
+      console.log("Error during fetching coupon", error);
+    }
+  };
+
+  useEffect(() => {
+    if(event?.id){
+    fetchEarlyBird();
+    }
+  }, [event]);
+  
+  useEffect(() => {
+        if (!findCoupon) return;
+
+  const expiry = new Date(findCoupon.expiresAt);
+  expiry.setHours(23, 59, 59, 999); 
+    if (findCoupon?.isActive === true && expiry >= new Date()) {
+      formik.setFieldValue("couponCode", findCoupon.couponCode);
+    }
+  }, [findCoupon]);
+   const generateCouponError = (message) => new Yup.ValidationError(message, null, 'couponCode');
   const validationSchema = Yup.lazy(() => {
     let schema = Yup.object({
       firstName: Yup.string().required("First Name is required"),
@@ -182,6 +207,172 @@ medicalIssue: Yup.string(),
           : {}),
       // couponCode: Yup.string().max(15, 'Coupon code must not exceed more than 10 letters'),
       
+      couponCode: Yup.string()
+      .max(15, 'Coupon code must not exceed 15 characters')
+      .test('valid-coupon', '', async (value) => {
+        if (!value) return true;
+        if (findCoupon && value === findCoupon.couponCode) return true;
+        // const isValidCoupon = coupon && coupon?.couponCode?.toLowerCase() === value?.toLowerCase();
+        // if (!isValidCoupon) {
+        //   throw generateCouponError('Invalid coupon');
+        // }
+
+if(formik.values.couponCode === "RHOCK10" && formik.values.educationInstitution !== "RHOCK HEALTH")
+{
+  throw generateCouponError('Invalid coupon');
+}
+if(formik.values.couponCode === "IDATVL10" && formik.values.educationInstitution !== "INDIAN DENTAL ASSOCIATION")
+  {
+    throw generateCouponError('Invalid coupon');
+  }
+  if(formik.values.couponCode === "PBIS20" && formik.values.educationInstitution !== "PUSHPALATA BRITISH INTERNATIONAL SCHOOL")
+    {
+      throw generateCouponError('Invalid coupon');
+    }
+    if(formik.values.couponCode === "PVM20" && formik.values.educationInstitution !== "PUSHPALATA VIDYA MANDIR, SENIOR SECONDARY SCHOOL")
+      {
+        throw generateCouponError('Invalid coupon');
+      }
+      if(formik.values.couponCode === "PMHS20" && formik.values.educationInstitution !== "PUSHPALATA MATRICULATION SCHOOL")
+        {
+          throw generateCouponError('Invalid coupon');
+        }
+        if(event?.slug === "rmkv-nellai-marathon-2025" && formik.values.couponCode === "SCHOOL20" && calculateAge(formik.values.dateOfBirth) >= 19)
+          {
+            throw generateCouponError('Invalid coupon');
+          }
+          if(event?.slug === "nandi-hill-monsoon-run" && formik.values.couponCode === "ntest10" && formik.values.greenWarrior !== "Opting for event organiser's transportation")
+                                      {
+                                       throw generateCouponError('Invalid coupon');
+                                      }
+                                           if(event?.slug === "nandi-hill-monsoon-run" && formik.values.couponCode === "ntest15" && formik.values.greenWarrior !== "Coming to the event by an EV (electric car)")
+                                      {
+                                       throw generateCouponError('Invalid coupon');
+                                      }
+                                            if(event?.slug === "nandi-hill-monsoon-run" && formik.values.couponCode === "ntest20" && formik.values.greenWarrior !== "Bringing your own bottle")
+                                      {
+                                       throw generateCouponError('Invalid coupon');
+                                      }
+        //   if(event?.slug === "toyota-bidadi-half-marathon-second-edition" && formik.values.couponCode === "BHM25KIRM" && formik.values.company !== 'TOYOTA KIRLOSKAR MOTOR')
+        //     {
+        //       throw generateCouponError('Invalid coupon');
+        //   }
+        //  if(event?.slug === "toyota-bidadi-half-marathon-second-edition" && formik.values.couponCode === "TBHMKOUSH" && formik.values.company !== 'TOYOTA KIRLOSKAR MOTOR')
+        //     {
+        //       throw generateCouponError('Invalid coupon');
+        //  }
+        //  if(event?.slug === "toyota-bidadi-half-marathon-second-edition" && formik.values.couponCode === "TBHMTKM50" && formik.values.company !== 'TOYOTA KIRLOSKAR MOTOR')
+        //     {
+        //       throw generateCouponError('Invalid coupon');
+        //     }
+        //     if(event?.slug === "toyota-bidadi-half-marathon-second-edition" && formik.values.couponCode === "BHM25BLTD" && formik.values.company !== 'BOSCH LTD')
+        //       {
+        //         throw generateCouponError('Invalid coupon');
+        //       }
+        //       if(event?.slug === "toyota-bidadi-half-marathon-second-edition" && formik.values.couponCode === "BHM25IBNK" && formik.values.company !== 'ICICI BANK')
+        //         {
+        //           throw generateCouponError('Invalid coupon');
+        //         }
+        //         if(event?.slug === "toyota-bidadi-half-marathon-second-edition" && formik.values.couponCode === "BHM25ILBD" && formik.values.company !== 'ICICI LOMBARD')
+        //           {
+        //             throw generateCouponError('Invalid coupon');
+        //           }
+        //           if(event?.slug === "toyota-bidadi-half-marathon-second-edition" && formik.values.couponCode === "BHM25COKA" && formik.values.company !== 'COCA COLA')
+        //             {
+        //               throw generateCouponError('Invalid coupon');
+        //             }
+        //          if(event?.slug === "toyota-bidadi-half-marathon-second-edition" && formik.values.couponCode === "BHM25MSWL" && formik.values.company !== 'MOTHER SON SUMI WIRES LTD')
+        //         {
+        //          throw generateCouponError('Invalid coupon');
+        //         }
+        //         if(event?.slug === "toyota-bidadi-half-marathon-second-edition" && formik.values.couponCode === "BHM25GLEN" && formik.values.company !== 'BGS GLENEAGLES')
+        //           {
+        //            throw generateCouponError('Invalid coupon');
+        //           }
+        //           if(event?.slug === "toyota-bidadi-half-marathon-second-edition" && formik.values.couponCode === "BHM25SHOS" && formik.values.company !== 'SPARSH HOSPITAL')
+        //             {
+        //              throw generateCouponError('Invalid coupon');
+        //             }
+        //             if(event?.slug === "toyota-bidadi-half-marathon-second-edition" && formik.values.couponCode === "BHM25STUD" && formik.values.company !== 'JOLLYWOOD STUDIOS AND ADVENTURES')
+        //               {
+        //                throw generateCouponError('Invalid coupon');
+        //               }
+        //               if(event?.slug === "toyota-bidadi-half-marathon-second-edition" && formik.values.couponCode === "BHM25TSIN" && formik.values.company !== 'TOYOTA TSUSHO INDIA PVT. LTD')
+        //                 {
+        //                  throw generateCouponError('Invalid coupon');
+        //                 }
+        //                 if(event?.slug === "toyota-bidadi-half-marathon-second-edition" && formik.values.couponCode === "BHM25TBIN" && formik.values.company !== 'TOYOTA BOSHOKU INDIA LTD')
+        //                   {
+        //                    throw generateCouponError('Invalid coupon');
+        //                   }
+        //                   if(event?.slug === "toyota-bidadi-half-marathon-second-edition" && formik.values.couponCode === "BHM25JBMX" && formik.values.company !== 'JBM')
+        //                     {
+        //                      throw generateCouponError('Invalid coupon');
+        //                     }
+        //                     if(event?.slug === "toyota-bidadi-half-marathon-second-edition" && formik.values.couponCode === "BHM25PMNT" && formik.values.company !== 'PARAMOUNT')
+        //                       {
+        //                        throw generateCouponError('Invalid coupon');
+        //                       }
+        //                       if(event?.slug === "toyota-bidadi-half-marathon-second-edition" && formik.values.couponCode === "BHM25TLKI" && formik.values.company !== 'TOYOTA LOGISTICS KISHOR INDIA PVT LTD')
+        //                         {
+        //                          throw generateCouponError('Invalid coupon');
+        //                         }
+        //                         if(event?.slug === "toyota-bidadi-half-marathon-second-edition" && formik.values.couponCode === "BHM25TTID" && formik.values.company !== 'TTID')
+        //                           {
+        //                            throw generateCouponError('Invalid coupon');
+        //                           }
+        //                           if(event?.slug === "toyota-bidadi-half-marathon-second-edition" && formik.values.couponCode === "BHM25ELIC" && formik.values.company !== 'ELCIA')
+        //                             {
+        //                              throw generateCouponError('Invalid coupon');
+        //                             }
+        //                             if(event?.slug === "toyota-bidadi-half-marathon-second-edition" && formik.values.couponCode === "BHM25ANBI" && formik.values.company !== 'ANTHEM BIO-SCIENCES')
+        //                               {
+        //                                throw generateCouponError('Invalid coupon');
+        //                               }
+        //                               if(event?.slug === "toyota-bidadi-half-marathon-second-edition" && formik.values.couponCode === "TBHMJJS50" && formik.values.runnerClub !== 'JAYANAGAR JAGUARS')
+        //                                 {
+        //                                  throw generateCouponError('Invalid coupon');
+        //                                 }
+        //                                 if(event?.slug === "toyota-bidadi-half-marathon-second-edition" && formik.values.couponCode === "TBHMPM50" && formik.values.runnerClub !== 'PACEMAKERS')
+        //                                   {
+        //                                    throw generateCouponError('Invalid coupon');
+        //                                   }
+        //                                   if(event?.slug === "toyota-bidadi-half-marathon-second-edition" && formik.values.couponCode === "TBHMRA50" && formik.values.runnerClub !== 'RUN ADDICTS')
+        //                                     {
+        //                                      throw generateCouponError('Invalid coupon');
+        //                                     }
+        //                                     if(event?.slug === "toyota-bidadi-half-marathon-second-edition" && formik.values.couponCode === "TBHMTLI100" && formik.values.company !== 'TLI')
+        //                                       {
+        //                                        throw generateCouponError('Invalid coupon');
+        //                                       }
+        //                                       if(event?.slug === "toyota-bidadi-half-marathon-second-edition" && formik.values.couponCode === "TBHMCTL100" && formik.values.company !== 'CATALER')
+        //                                         {
+        //                                          throw generateCouponError('Invalid coupon');
+        //                                         }
+        //                                         if(event?.slug === "toyota-bidadi-half-marathon-second-edition" && formik.values.couponCode === "TBHMTGS100" && formik.values.company !== 'TGSIN')
+        //                                           {
+        //                                            throw generateCouponError('Invalid coupon');
+        //                                           }
+        //                                           if(event?.slug === "toyota-bidadi-half-marathon-second-edition" && formik.values.couponCode === "TBHMTB50" && formik.values.runnerClub !== 'TRAILBLAZERS')
+        //                                             {
+        //                                              throw generateCouponError('Invalid coupon');
+        //                                             }
+        // if (coupon?.isActive === false || new Date(coupon?.expiresAt) < new Date()) {
+        //   throw generateCouponError('Invalid Coupon');
+        // }
+        // if (formik.values.categoryName && coupon?.categories !== null && !coupon?.categories?.includes(formik.values.categoryName)) {
+        //   throw generateCouponError(`This coupon is not valid for the selected category: ${formik.values.categoryName}`);
+        // }
+
+        // if (coupon?.gender !==null && formik.values.gender && coupon.gender !== formik.values.gender && coupon.gender !== 'Both') {
+        //   throw generateCouponError(`This coupon is not valid for the selected gender: ${formik.values.gender}`);
+        // }
+        return true;
+       }).when([], {
+    is: () => event?.slug === "moonlight-kids-run-2026",
+    then: schema => schema.required('Coupon code is required'),
+    otherwise: schema => schema.notRequired()
+      }),
       chronicIssues: Yup.string(),
       disorders: Yup.string(),
     });
@@ -313,6 +504,7 @@ const parseDOB = (dateString) => {
     Number(day)
   );
 };
+const [hasPrefilledMerchandise, setHasPrefilledMerchandise] = useState(false);
 const getParticipantByBibNumber = async () => {
   const bibNumber = formik.values.guestBibNumber?.trim();
 
@@ -375,6 +567,7 @@ const getParticipantByBibNumber = async () => {
         "timingSubmission",
         "garminLinks",
         "jatreDistance",
+        "merchandiseId"
       ];
 
       fieldsToPopulate.forEach((field) => {
@@ -386,6 +579,13 @@ const getParticipantByBibNumber = async () => {
           formik.setFieldValue(field, participant[field], false);
         }
       });
+const prefilledMerchandise =
+  participant.merchandiseId !== undefined &&
+  participant.merchandiseId !== null &&
+  participant.merchandiseId !== "";
+
+console.log('prefilledMerchandise:', prefilledMerchandise);
+setHasPrefilledMerchandise(prefilledMerchandise)
 if (participant.dateOfBirth) {
   formik.setFieldValue(
     "dateOfBirth",
@@ -420,7 +620,7 @@ if (participant?.state) {
 
       return true;
     }
-
+ setHasPrefilledMerchandise(false);
     return false;
   }  catch (error) {
   console.log(
@@ -445,7 +645,7 @@ if (participant?.state) {
   setFormValues({
     guestBibNumber: bibNumber,
   });
-
+  setHasPrefilledMerchandise(false);
   return false;
 } finally {
     setIsLoading(false);
@@ -468,12 +668,17 @@ const [existingItems, setExistingItems] = useState([])
 fetchMechandise();
  }, [event?.id])
 
+useEffect(() => {
+  if (hasPrefilledMerchandise) {
+    formik.setFieldValue("IsGuestOptedAddon", true, false);
+  }
+}, [hasPrefilledMerchandise]);
   const [verifyCouponLoading, setVerifyCouponLoading] = useState(false);
 const handleCouponVerify = async () => {
   try {
     setVerifyCouponLoading(true);
     const res = await axios.post(
-      `${baseUrl}users/verify-coupon`,
+      `${baseUrl}users/verify-guestcoupon`,
       {
         couponCode: formik.values.couponCode,
         eventId: event?.id,
@@ -486,7 +691,7 @@ const handleCouponVerify = async () => {
     if (res.data.valid) {
       return true;
     }
-
+  formik.setFieldTouched("couponCode", true, false);
     formik.setFieldError(
       "couponCode",
       res.data.message || "Coupon is invalid"
@@ -495,7 +700,7 @@ const handleCouponVerify = async () => {
     return false;
 
   } catch (err) {
-
+    formik.setFieldTouched("couponCode", true, false);
     formik.setFieldError(
       "couponCode",
       err?.response?.data?.message ||
@@ -556,7 +761,7 @@ const handleCouponVerify = async () => {
           //if(data.amount > 0) {
             setFormValues(data)
             setFormSubmitted(true);
-              setCurrentStep(currentStep + 1)  
+              setCurrentStep(steps.length - 1);
              //} 
           // else {
           //   window.location.href = `https://www.novarace.in/pages/success/${data.id}`
@@ -767,6 +972,7 @@ const renderSpinner = () => {
       ),
       content:  <CustomerInfo
          eventCategory = {event}
+         findCoupon={findCoupon}
          registrationUrl={regsitrationUrl}
          categoryMinimumAge={categoryMinimumAge}
          formik={formik}
@@ -789,6 +995,7 @@ const renderSpinner = () => {
             content: <MerchandiseInfo
               merchandise={merchandise}
               formValues={formValues}
+              hasPrefilledMerchandise={hasPrefilledMerchandise}
               event={event}
               formik={formik}
               nextStep={nextStep}
@@ -807,6 +1014,7 @@ const renderSpinner = () => {
         formik={formik}
          formValues={formValues}
         event={event}
+           existingItems={existingItems}
         merchandise={merchandise}
 
       />
@@ -909,7 +1117,7 @@ const renderSpinner = () => {
   type="button"
   className="btn btn-primary mobile-width h-60 px-24 -dark-1 bg-blue-1 text-white my-3"
   onClick={async () => {
-    if (event?.isMerchandiseEnabled && formik.values.couponCode) {
+    if (event?.isMerchandiseEnabled && formik.values.couponCode && currentStep !== 0) {
       const validCoupon = await handleCouponVerify();
       if (!validCoupon) {
       return;
@@ -923,7 +1131,7 @@ const renderSpinner = () => {
     // }
     handleRegisterClick();
   }}
-      disabled={(event?.slug === "stick-to-safety-marathon" || event?.slug === "gadinadu-sports-club-lake-run-2026") && formik.values.membershipId && !formik.values.isSpecialNeeds}
+      disabled={(event?.slug === "stick-to-safety-marathon" || event?.slug === "gadinadu-sports-club-lake-run-2026") && formik.values.membershipId && !formik.values.isSpecialNeeds}       
              
 >
   {isLoading
