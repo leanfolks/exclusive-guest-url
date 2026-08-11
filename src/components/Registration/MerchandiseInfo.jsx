@@ -153,7 +153,7 @@ The Border Double is a premium endurance challenge designed for runners who want
                 </div>
 }
 {hasPrefilledMerchandise &&
-<div className='fw-bold'>You already opted border double in previous event, please skip to continue</div>
+<div className='fw-bold'>You have already selected this addon during your previous Lake Run registration. It cannot be selected again. Please skip this addon to proceed with your registration.</div>
 }
               <div className="col-md-5">
                 <div className='d-flex gap-2 align-items-start gap-3'>
