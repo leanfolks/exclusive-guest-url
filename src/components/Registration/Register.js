@@ -567,7 +567,8 @@ const getParticipantByBibNumber = async () => {
         "timingSubmission",
         "garminLinks",
         "jatreDistance",
-        "merchandiseId"
+        "merchandiseId",
+         "whatsAppNumber"
       ];
 
       fieldsToPopulate.forEach((field) => {
@@ -584,8 +585,26 @@ const prefilledMerchandise =
   participant.merchandiseId !== null &&
   participant.merchandiseId !== "";
 
-console.log('prefilledMerchandise:', prefilledMerchandise);
+
 setHasPrefilledMerchandise(prefilledMerchandise)
+const hasWhatsAppNumber =
+  participant.whatsAppNumber !== undefined &&
+  participant.whatsAppNumber !== null &&
+  participant.whatsAppNumber !== "";
+
+formik.setFieldValue(
+  "enableWhatsApp",
+  hasWhatsAppNumber,
+  false
+);
+
+formik.setFieldValue(
+  "whatsAppNumber",
+  hasWhatsAppNumber
+    ? participant.whatsAppNumber
+    : "",
+  false
+);
 if (participant.dateOfBirth) {
   formik.setFieldValue(
     "dateOfBirth",
