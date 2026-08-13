@@ -161,7 +161,7 @@ const isClosed = isDisabled || isExpired;
 
 <div className="col-md-6">
   <div className="border p-4">
-<p className="fw-bold">Enter your Bib Number below to continue</p>
+<p className="fw-bold">{registrationUrl?.label}</p>
           <div className={`form-input form-group row align-items-center m-2 ${formik.touched.guestBibNumber && formik.errors.guestBibNumber ? "errorStyle" : ''}`}>
           <label className="text-16 fw-bold col-sm-4">Bib Number <span className='text-danger'>*</span></label>
               <div className='col-sm-8 mt-3'>
