@@ -551,7 +551,7 @@ return (
                           ) {
                             return;
                           }
-                                  if (category?.isCategoryActiveForSplUrl !== "YES") return;
+                                  //if (category?.isCategoryActiveForSplUrl !== "YES") return;
                            formik.setFieldValue("categoryName", category.name);
                         }}
                           onMouseEnter={() => setHoveredCategory(category)}
