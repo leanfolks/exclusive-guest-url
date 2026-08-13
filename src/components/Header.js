@@ -29,7 +29,7 @@ const Header = ({handleToggle, event, label}) => {
                     <img src="/img/logo-light.svg" alt="logo icon" style={{width:"100px", height: "auto"}}/>
                 </Link>
    <div className='text-white text-uppercase'>{event?.eventName}</div>
-   <div className='text-white text-uppercase'>{label}</div>
+   <div className='text-white text-uppercase'></div>
             {/* <Link
                 to="/login"
                 className="button btn px-3 fw-400 text-14 border-white -outline-white h-50 text-white"
