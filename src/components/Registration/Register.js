@@ -1053,8 +1053,11 @@ const renderSpinner = () => {
 
   useEffect(() => {
     const updatedErrors = Object.keys(formik.errors);
+   if(currentStep !== 0)
+   {
     setErrorList(updatedErrors);
-  }, [formik.errors]);
+   }
+}, [formik.errors, currentStep]);
   return (
     <>
     <style>

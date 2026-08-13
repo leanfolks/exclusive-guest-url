@@ -59,6 +59,7 @@ const handleSubmit = async () => {
   nextStep();
 };
   const handleButtonClick = () => {
+     formik.setFieldValue("merchandiseId", null);
     nextStep();
     };
     useEffect(() => {
@@ -116,7 +117,7 @@ const handleSubmit = async () => {
           }`
         }
       </style>
-      <div className='container mt-20'>
+      <div className='container mt-3'>
         <h3 className='text-center'> Add ons</h3>
 
         <div className="form-group form-input m-2 px-3 mx-auto">
@@ -131,7 +132,7 @@ const handleSubmit = async () => {
               transition: 'box-shadow 0.3s ease',
             }}
             >
-              {event?.slug === "the-sarjapura-run-2026" &&
+              {!hasPrefilledMerchandise &&
               <div className=''>
 The 'Border Double' Challenge<br/>
 The Border Double is a premium endurance challenge designed for runners who want to conquer two of the region's most scenic routes in a single season.
@@ -165,6 +166,7 @@ The Border Double is a premium endurance challenge designed for runners who want
                       required
                       onClick={() => handleMerchandiseSelect(item.id, item.name)}
                     checked={selectedMerchandiseId === item.id}
+                    disabled={hasPrefilledMerchandise}
                     />
                   </div>
                   <div className='mt-2'>
